@@ -68,26 +68,28 @@ def predict():
 #     pass
 
 
-def run(host, port, isProd):
-    if isProd:
-        serve(app, host=host, port=port, threads=10, url_scheme='http')
-    else:
+def run(host, port, isDev):
+    if isDev:
         # app.run(host, port, debug=args.verbose)
-        app.run(host, port, debug=True)
+        app.run(host, port, debug=True)        
+    else:
+        print('run as prod.')
+        serve(app, host=host, port=port, threads=10, url_scheme='http')
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-p', '--port', default=5000)
     parser.add_argument('--host', default='127.0.0.1')
     parser.add_argument('-v', '--verbose', action='store_true')
-    parser.add_argument('--prod', action='store_true')
+    parser.add_argument('--dev', action='store_true')
 
     parser.add_argument('-s', '--num_inference_steps', default=50)
     parser.add_argument('-n', '--num_images_per_prompt', default=1)
     parser.add_argument('--use_dummy', action='store_true', help='use dummy stable diffusion')
     parser.add_argument('--device', default=None, help='torch run device. default cpu')
 
-    args = parser.parse_args()    
+    args = parser.parse_args()
+
     if args.use_dummy:
         sd = Dummy()
     else:        
@@ -96,5 +98,5 @@ if __name__ == '__main__':
                             num_images_per_prompt= args.num_images_per_prompt
                             )    
     app.wsgi_app = InitModelMiddlewere(app.wsgi_app, sd)
-    run(args.host, args.port, args.prod)
+    run(args.host, args.port, args.dev)
     # socketio.run(app, debug=True)
