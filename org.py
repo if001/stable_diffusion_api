@@ -55,7 +55,8 @@ def cb(step, a, b):
 
 if __name__ == '__main__':
     # prompt = "brain, cartoon style, concept art, pop, cute"
-    prompt = "charming white cat::drawing cartoon::pop style::concept art"
+    # prompt = "charming white cat::drawing cartoon::pop style::concept art"
+    prompt = "assasin white cat::drawing cartoon::pop style::concept art"
     # s = StableDiffusion(img_size=512, num_inference_steps=75)
     s = StableDiffusion(num_inference_steps=100)
     # s.predict(prompt, cb)

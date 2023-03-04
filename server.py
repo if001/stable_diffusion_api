@@ -70,9 +70,10 @@ def predict():
 
 def run(host, port, isProd):
     if isProd:
-        serve(app, host=args.host, port=args.port, threads=10, url_scheme='http')
+        serve(app, host=host, port=port, threads=10, url_scheme='http')
     else:
-        app.run(args.host, args.port, debug=args.verbose)
+        # app.run(host, port, debug=args.verbose)
+        app.run(host, port, debug=True)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -91,7 +92,7 @@ if __name__ == '__main__':
         sd = Dummy()
     else:        
         sd = StableDiffusion(img_size=768,
-                            num_inference_step = args.num_inference_steps, 
+                            num_inference_steps = args.num_inference_steps, 
                             num_images_per_prompt= args.num_images_per_prompt
                             )    
     app.wsgi_app = InitModelMiddlewere(app.wsgi_app, sd)
