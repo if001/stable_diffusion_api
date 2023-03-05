@@ -5,8 +5,7 @@ stable diffusion test
 日本語版 stable diffusion
 
 ## org.py
-stable-diffusion-2-1
-
+use stable-diffusion-2-1
 
 ## server.py
 python server.py
@@ -24,10 +23,34 @@ optional arguments:
   --device DEVICE       torch run device. default cpu
 ```
 
+### params
 
-### client
+GET `/echo`
+params:
+return:
+
+GET `/predict`
+params: `prompt=[str]`
+return: image array
+
+
+POST `/make_image`
+for slack slash command
+
+### set env value
+SLACK_TOKEN: bot user token.
+CHANNEL: file send channel id. default send to local_sch(stable_diffusion channel)
+
+ローカルで動かす場合は、`.env`を追加。
 
 ```
+SLACK_TOKEN=token
+CHANNEL=channel
+```
+
+##  client
+
+```bash
 $curl -X GET 'localhost:5000/predict?prompt=cute,brain'
 
 {
@@ -40,3 +63,11 @@ or
 
 `sh req.sh`
 
+## slack
+サーバーでは、slackのslach commandを受け取って、slackにメッセージを送る
+
+slackでappを作り、channel_idとtokenを取ってくる
+
+file sendの詳細はここを参照
+
+https://api.slack.com/methods/files.upload
