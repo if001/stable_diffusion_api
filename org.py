@@ -31,7 +31,7 @@ class StableDiffusion():
                     height=self.img_size,
                     num_inference_steps=self.num_inference_steps,
                     num_images_per_prompt=self.num_images_per_prompt,
-                    output_type='str'
+                    output_type='pil'
                     )
         return result.images
             
@@ -56,8 +56,9 @@ def cb(step, a, b):
 if __name__ == '__main__':
     # prompt = "brain, cartoon style, concept art, pop, cute"
     # prompt = "charming white cat::drawing cartoon::pop style::concept art"
-    prompt = "assasin white cat::drawing cartoon::pop style::concept art"
+    # prompt = "assasin white cat::drawing cartoon::pop style::concept art"
+    prompt = "assasin white cat::drawing cartoon::pop"
     # s = StableDiffusion(img_size=512, num_inference_steps=75)
-    s = StableDiffusion(num_inference_steps=100)
+    s = StableDiffusion(num_inference_steps=50)
     # s.predict(prompt, cb)
     s.image(prompt)
