@@ -3,6 +3,7 @@ from flask import Flask,request, jsonify
 # from flask_socketio import SocketIO, send, emit
 import argparse
 from waitress import serve
+import logging
 
 app = Flask(__name__)
 
@@ -11,7 +12,7 @@ class Dummy():
         print('use dummy...')
 
     def predict(self, prompt):
-        return 'dummy'
+        return ['dummy']
         
 class InitModelMiddlewere:
     def __init__(self, app, stableDiffusion):
@@ -22,6 +23,10 @@ class InitModelMiddlewere:
         if 'sd' not in environ.keys():                    
             environ['sd'] = self.sd
         return self.app(environ, start_response)
+
+@app.before_request
+def log_request_info():
+    app.logger.info('%s - %s - %s - %s', request.remote_addr, request.method, request.url, request.query_string)
 
 @app.route("/", methods=['GET'])
 def echo():
@@ -45,7 +50,7 @@ def predict():
         images = [ v.tolist() for v in result]
         return jsonify({ 'message': 'ok', 'images': images })
     except Exception as e:
-        print('exception ', e)
+	app.logger.info('exception %s', e)
         return jsonify({'message': 'server error'}), 500
 
 # ## websocket
@@ -97,6 +102,7 @@ if __name__ == '__main__':
                             num_inference_steps = args.num_inference_steps, 
                             num_images_per_prompt= args.num_images_per_prompt
                             )    
-    app.wsgi_app = InitModelMiddlewere(app.wsgi_app, sd)
+    app.wsgi_app = InitModelMiddlewere(app.wsgi_app, sd)    
+    app.logger.setLevel(logging.INFO)
     run(args.host, args.port, args.dev)
     # socketio.run(app, debug=True)
